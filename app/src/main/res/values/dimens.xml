@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="prof_img_w">50dp</dimen>
+    <dimen name="prof_img_h">50dp</dimen>
+    <dimen name="max_post_img_h">500dp</dimen>
+</resources>
