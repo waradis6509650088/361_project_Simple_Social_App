@@ -5,3 +5,14 @@
 - Glide 
 - Volley
 - SwipeRefreshLayout
+
+## TODOS
+### client
+- [ ] account page
+- [ ] setting page
+- [ ] new post api 
+- [ ] login page
+### API
+- [ ] retrieve pic from url
+- [ ] get post data from url
+- [ ] auth
