@@ -1,11 +1,15 @@
 package com.example.thesimplesocialapp;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -48,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    protected void changeToMenuPage() {
+        Intent page = new Intent();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         menuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                setContentView(R.layout.menu_page);
             }
         });
 
@@ -95,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onRefresh() {
+                //==============================================================================
                 // if change without this the, app will throw a null pointer exception
 
                 // create empty tmp array and tmp adapter
@@ -107,8 +116,9 @@ public class MainActivity extends AppCompatActivity {
                 getData();
                 adapter.notifyDataSetChanged();
                 recycleview.setAdapter(adapter);
+                //==============================================================================
 
-                Log.i("yes",postData.toString());
+                Log.i("current data",postData.toString());
                 swipeLayout.setRefreshing(false);
             }
         });
