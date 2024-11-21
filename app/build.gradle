@@ -38,6 +38,7 @@ dependencies {
     implementation libs.androidx.swiperefreshlayout
     implementation libs.volley
     implementation libs.glide
+    implementation libs.androidx.material3
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core

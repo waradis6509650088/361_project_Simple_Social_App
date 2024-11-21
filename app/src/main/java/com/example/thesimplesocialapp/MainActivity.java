@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SlidingDrawer;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     ArrayList<Post> postData;
     private void getData(){
-        // get data from somewhere idk
+        // get data from somewhere
         ArrayList<String> exampleData = new ArrayList<String>();
         ArrayList<Post> data = new ArrayList<Post>();
 
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         RelativeLayout mainLayout = findViewById(R.id.main_layout);
         LinearLayout menuBtn = findViewById(R.id.menu_btn);
         LinearLayout newPostBtn = findViewById(R.id.new_post_btn);
+        LinearLayout accountBtn = findViewById(R.id.account_btn);
 
         // main data to display to homepage
         postData = new ArrayList<Post>();
@@ -83,6 +85,12 @@ public class MainActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        accountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
         });
 
         menuBtn.setOnClickListener(new View.OnClickListener() {
