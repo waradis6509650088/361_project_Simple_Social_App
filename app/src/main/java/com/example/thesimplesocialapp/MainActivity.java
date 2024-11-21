@@ -62,14 +62,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //EdgeToEdge.enable(this);
 
-        // get relevant elements
         setContentView(R.layout.activity_main);
+        // homepage elements
         RecyclerView recycleview = findViewById(R.id.recycle_view);
         SwipeRefreshLayout swipeLayout = findViewById(R.id.swipe_refresh);
         RelativeLayout mainLayout = findViewById(R.id.main_layout);
         LinearLayout menuBtn = findViewById(R.id.menu_btn);
         LinearLayout newPostBtn = findViewById(R.id.new_post_btn);
         LinearLayout accountBtn = findViewById(R.id.account_btn);
+
+        // account menu elements
+        ImageView accBackBtn = findViewById(R.id.account_back_btn);
+        LinearLayout accBlockingLayout = findViewById(R.id.homepageBlocking_layout);
+        RelativeLayout accMenu = findViewById(R.id.account_relative_layout);
 
         // main data to display to homepage
         postData = new ArrayList<Post>();
@@ -87,9 +92,33 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+
+        accBlockingLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                accBlockingLayout.setVisibility(View.GONE);
+                accBlockingLayout.setClickable(false);
+                accMenu.setVisibility(View.GONE);
+            }
+        });
+
+        accBackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                accBlockingLayout.setVisibility(View.GONE);
+                accBlockingLayout.setClickable(false);
+                accMenu.setVisibility(View.GONE);
+            }
+        });
+
         accountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                accBlockingLayout.setAlpha(0.2f);
+                accBlockingLayout.setVisibility(View.VISIBLE);
+                accBlockingLayout.setClickable(true);
+                accMenu.setVisibility(View.VISIBLE);
+                accMenu.setClickable(true);
             }
         });
 

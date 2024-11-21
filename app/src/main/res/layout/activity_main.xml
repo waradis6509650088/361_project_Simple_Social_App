@@ -11,13 +11,12 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="end"
         >
         <LinearLayout
+            android:id="@+id/home_page"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="1"
             >
             <LinearLayout
                 android:layout_width="match_parent"
@@ -27,6 +26,28 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:padding="1dp"
                 >
+                <LinearLayout
+                    android:id="@+id/account_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical|center_horizontal"
+                    >
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/user_icon"
+                        />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="MYUSER@DOMAIN.APP"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|center_horizontal"
+                    />
                 <LinearLayout
                     android:id="@+id/menu_btn"
                     android:layout_width="50dp"
@@ -41,28 +62,6 @@
                         />
 
                 </LinearLayout>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:text="MYUSER@DOMAIN.APP"
-                    android:textSize="14sp"
-                    android:textColor="@color/white"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|center_horizontal"
-                    />
-                <LinearLayout
-                    android:id="@+id/account_btn"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical|center_horizontal"
-                    >
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/user_icon"
-                        />
-                </LinearLayout>
 
 
             </LinearLayout>
@@ -73,7 +72,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 >
-                <include layout="@layout/post_view"/>
+                <include layout="@layout/post_recyclerview"/>
             </RelativeLayout>
 
             <LinearLayout
@@ -111,12 +110,21 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/homepageBlocking_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            />
         <RelativeLayout
+            android:id="@+id/account_relative_layout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
             >
             <include layout="@layout/accountselect_page"/>
-
         </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

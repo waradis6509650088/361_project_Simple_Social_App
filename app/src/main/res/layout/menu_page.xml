@@ -11,15 +11,20 @@
         android:orientation="vertical"
         >
         <LinearLayout
-            android:id="@+id/menu_back_btn"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             >
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:src="@drawable/back" />
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="back button"
+                android:layout_height="wrap_content"
+                android:text="Home"
+                android:textColor="@color/white"
+                android:textSize="24dp"
                 />
         </LinearLayout>
 
