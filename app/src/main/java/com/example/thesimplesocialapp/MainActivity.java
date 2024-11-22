@@ -30,6 +30,24 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> exampleData = new ArrayList<String>();
         ArrayList<Post> data = new ArrayList<Post>();
 
+        // --response format--
+        // each post:
+        // {
+        //     username:xxx,
+        //     image-url:xxx,
+        //     date-posted:unixtime,
+        //     text-content:xxx
+        // }
+        // all post:
+        // {
+        //     data:{
+        //         eachpost{},
+        //         eachpost{},
+        //         eachpost{],
+        //         ...
+        //     }
+        // }
+
         //add example data to array
         exampleData.add("{\"username\":\"user123\",\"date-posted\":\"2024-11-01T10:30:00Z\",\"text-content\":\"Hello, world! This is my first post.\"}");
         exampleData.add("{\"username\":\"jane_doe\",\"date-posted\":\"2024-11-02T14:15:00Z\",\"text-content\":\"Loving the new features in this app!\"}");
@@ -50,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         for(String post : exampleData){
             data.add(new Post(post));
         }
+
+        // visible post should be in postData array
         postData.addAll(data);
 
     }
@@ -57,9 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private void openAccountMenu(){
         LinearLayout accBlockingLayout = findViewById(R.id.homepageBlocking_layout);
         RelativeLayout accMenu = findViewById(R.id.account_relative_layout);
-        LinearLayout accountBtn = findViewById(R.id.account_btn);
 
-        accountBtn.setClickable(false);
         accBlockingLayout.setVisibility(View.VISIBLE);
         accBlockingLayout.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in));
         accBlockingLayout.setAlpha(.2f);
@@ -72,9 +90,7 @@ public class MainActivity extends AppCompatActivity {
     private void closeAccountMenu(){
         LinearLayout accBlockingLayout = findViewById(R.id.homepageBlocking_layout);
         RelativeLayout accMenu = findViewById(R.id.account_relative_layout);
-        LinearLayout accountBtn = findViewById(R.id.account_btn);
 
-        accountBtn.setClickable(true);
         accBlockingLayout.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out));
         accBlockingLayout.setAlpha(1f);
         accBlockingLayout.setVisibility(View.GONE);
