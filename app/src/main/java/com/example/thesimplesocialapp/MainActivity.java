@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,8 +54,34 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    protected void changeToMenuPage() {
-        Intent page = new Intent();
+    private void openAccountMenu(){
+        LinearLayout accBlockingLayout = findViewById(R.id.homepageBlocking_layout);
+        RelativeLayout accMenu = findViewById(R.id.account_relative_layout);
+        LinearLayout accountBtn = findViewById(R.id.account_btn);
+
+        accountBtn.setClickable(false);
+        accBlockingLayout.setVisibility(View.VISIBLE);
+        accBlockingLayout.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in));
+        accBlockingLayout.setAlpha(.2f);
+        accBlockingLayout.setClickable(true);
+        accMenu.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_in_left));
+        accMenu.setVisibility(View.VISIBLE);
+        accMenu.setClickable(true);
+    }
+
+    private void closeAccountMenu(){
+        LinearLayout accBlockingLayout = findViewById(R.id.homepageBlocking_layout);
+        RelativeLayout accMenu = findViewById(R.id.account_relative_layout);
+        LinearLayout accountBtn = findViewById(R.id.account_btn);
+
+        accountBtn.setClickable(true);
+        accBlockingLayout.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out));
+        accBlockingLayout.setAlpha(1f);
+        accBlockingLayout.setVisibility(View.GONE);
+        accBlockingLayout.setClickable(false);
+        accMenu.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_out_left));
+        accMenu.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -76,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout accBlockingLayout = findViewById(R.id.homepageBlocking_layout);
         RelativeLayout accMenu = findViewById(R.id.account_relative_layout);
 
+
         // main data to display to homepage
         postData = new ArrayList<Post>();
 
@@ -96,43 +124,35 @@ public class MainActivity extends AppCompatActivity {
         accBlockingLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                accBlockingLayout.setVisibility(View.GONE);
-                accBlockingLayout.setClickable(false);
-                accMenu.setVisibility(View.GONE);
+                closeAccountMenu();
             }
         });
 
         accBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                accBlockingLayout.setVisibility(View.GONE);
-                accBlockingLayout.setClickable(false);
-                accMenu.setVisibility(View.GONE);
+                closeAccountMenu();
             }
         });
 
         accountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                accBlockingLayout.setAlpha(0.2f);
-                accBlockingLayout.setVisibility(View.VISIBLE);
-                accBlockingLayout.setClickable(true);
-                accMenu.setVisibility(View.VISIBLE);
-                accMenu.setClickable(true);
+                openAccountMenu();
             }
         });
 
         menuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                setContentView(R.layout.menu_page);
+            public void onClick(View v){
+                startActivity(new Intent(MainActivity.this, MenuActivity.class));
             }
         });
+
 
         newPostBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
             }
         });
 
