@@ -1,6 +1,10 @@
 package com.example.thesimplesocialapp;
 
+import static android.app.PendingIntent.getActivity;
+import static androidx.compose.ui.text.SaversKt.save;
+
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -21,20 +28,35 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<Post> postData;
+    long backPressedTime; // Time of the last back press
+    private String REQUEST_IP = "https://668e-124-122-136-37.ngrok-free.app";//"668e-124-122-136-37.ngrok-free.app";
     private void getData(){
         // get data from somewhere
-        ArrayList<String> exampleData = new ArrayList<String>();
+        ArrayList<String> resPostJsonString = new ArrayList<String>();
         ArrayList<Post> data = new ArrayList<Post>();
 
         // --response format--
         // each post:
         // {
         //     username:xxx,
-        //     image-url:xxx,
+        //     prof-img:xxx,
+        //     post-img:xxx,
         //     date-posted:unixtime,
         //     text-content:xxx
         // }
@@ -48,29 +70,42 @@ public class MainActivity extends AppCompatActivity {
         //     }
         // }
 
-        //add example data to array
-        exampleData.add("{\"username\":\"user123\",\"date-posted\":\"2024-11-01T10:30:00Z\",\"text-content\":\"Hello, world! This is my first post.\"}");
-        exampleData.add("{\"username\":\"jane_doe\",\"date-posted\":\"2024-11-02T14:15:00Z\",\"text-content\":\"Loving the new features in this app!\"}");
-        exampleData.add("{\"username\":\"mark_smith\",\"date-posted\":\"2024-11-03T09:45:00Z\",\"text-content\":\"Can't wait for the weekend! Any plans?\"}");
-        exampleData.add("{\"username\":\"alice_wonder\",\"date-posted\":\"2024-11-04T08:00:00Z\",\"text-content\":\"Just finished a great book! Highly recommend it.\"}");
-        exampleData.add("{\"username\":\"bob_builder\",\"date-posted\":\"2024-11-05T12:30:00Z\",\"text-content\":\"Working on a new project. Excited to share updates!\"}");
-        exampleData.add("{\"username\":\"carol_conner\",\"date-posted\":\"2024-11-06T11:15:00Z\",\"text-content\":\"Had a fantastic day out with friends!\"}");
-        exampleData.add("{\"username\":\"dave_doe\",\"date-posted\":\"2024-11-07T17:00:00Z\",\"text-content\":\"Trying out a new recipe tonight. Wish me luck!\"}");
-        exampleData.add("{\"username\":\"eve_online\",\"date-posted\":\"2024-11-08T15:45:00Z\",\"text-content\":\"Just got back from vacation. Miss it already!\"}");
-        exampleData.add("{\"username\":\"frank_the_tank\",\"date-posted\":\"2024-11-09T09:00:00Z\",\"text-content\":\"Caught up on some much-needed sleep this weekend.\"}");
-        exampleData.add("{\"username\":\"grace_hopper\",\"date-posted\":\"2024-11-10T14:20:00Z\",\"text-content\":\"Looking forward to the upcoming tech conference!\"}");
-        exampleData.add("{\"username\":\"carol_conner\",\"date-posted\":\"2024-11-06T11:15:00Z\",\"text-content\":\"Had a fantastic day out with friends!\"}");
-        exampleData.add("{\"username\":\"dave_doe\",\"date-posted\":\"2024-11-07T17:00:00Z\",\"text-content\":\"Trying out a new recipe tonight. Wish me luck!\"}");
-        exampleData.add("{\"username\":\"eve_online\",\"date-posted\":\"2024-11-08T15:45:00Z\",\"text-content\":\"Just got back from vacation. Miss it already!\"}");
-        exampleData.add("{\"username\":\"frank_the_tank\",\"date-posted\":\"2024-11-09T09:00:00Z\",\"text-content\":\"Caught up on some much-needed sleep this weekend.\"}");
-        exampleData.add("{\"username\":\"grace_hopper\",\"date-posted\":\"2024-11-10T14:20:00Z\",\"text-content\":\"Looking forward to the upcoming tech conference!\"}");
+        StringRequest req = new StringRequest(Request.Method.GET, this.REQUEST_IP + "/posts",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try{
+                            JSONArray resArray = new JSONArray("["+response+"]");
+                            JSONObject resJson = new JSONObject(resArray.getJSONObject(0).toString());
+                            JSONArray data = new JSONArray(resJson.getJSONArray("data").toString());
+                            for(int i = 0; i < data.length(); i++){
+                                String postString = data.getJSONObject(i).toString();
+                                resPostJsonString.add(postString);
+                            }
+                        }
+                        catch (Error e){
+                            Log.e("err", Objects.requireNonNull(e.getMessage()));
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        //add example data to array
+                        Log.i("exdat", resPostJsonString.toString());
+                        for(String post : resPostJsonString){
+                            data.add(new Post(post));
+                        }
 
-        for(String post : exampleData){
-            data.add(new Post(post));
-        }
-
-        // visible post should be in postData array
-        postData.addAll(data);
+                        // visible post should be in postData array
+                        postData.addAll(data);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("err", Objects.requireNonNull(error.getMessage()));
+                    }
+        });
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(req);
 
     }
 
@@ -97,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         accBlockingLayout.setClickable(false);
         accMenu.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_out_left));
         accMenu.setVisibility(View.GONE);
+        accMenu.setClickable(false);
 
     }
 
@@ -136,6 +172,24 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        // back button pressed confirmation
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                Toast backToast; // Toast message
+                if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                    finish();
+                } else {
+                    // Show the toast message
+                    backToast = Toast.makeText(getApplicationContext(), "Press back again to exit", Toast.LENGTH_SHORT);
+                    backToast.show();
+                }
+
+                // Save the current time of back press
+                backPressedTime = System.currentTimeMillis();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         accBlockingLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,4 +250,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }

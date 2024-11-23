@@ -21,12 +21,10 @@ public class Post {
 
     Post(String jsonString){
         Random rand = new Random();
-        this.postImg = "https://picsum.photos/seed/" + rand.nextInt(5000) + "/500/500";
-        this.profImg = "https://picsum.photos/seed/" + rand.nextInt(5000) + "/500/500";
-        Log.i("log",this.postImg);
-        Log.i("log",this.profImg);
         try {
             JSONObject data = new JSONObject(jsonString);
+            this.profImg = data.getString("prof-img");
+            this.postImg = data.getString("post-img");
             this.username = data.getString("username");
             this.datePosted = data.getString("date-posted");
             this.textContent = data.getString("text-content");
