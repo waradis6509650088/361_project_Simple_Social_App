@@ -72,7 +72,19 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 >
-                <include layout="@layout/post_recyclerview"/>
+                <include
+                    android:id="@+id/post_recyclerview"
+                    layout="@layout/post_recyclerview"
+                    />
+                <TextView
+                    android:id="@+id/home_error_text"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nothing here at this time :("
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    />
             </RelativeLayout>
 
             <LinearLayout

@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -45,11 +46,9 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     ArrayList<Post> postData;
     long backPressedTime; // Time of the last back press
-    private String REQUEST_IP = "https://668e-124-122-136-37.ngrok-free.app";//"668e-124-122-136-37.ngrok-free.app";
+    private String REQUEST_IP = "https://668e-124-122-136-37.ngrok-free.app";
     private void getData(){
         // get data from somewhere
-        ArrayList<String> resPostJsonString = new ArrayList<String>();
-        ArrayList<Post> data = new ArrayList<Post>();
 
         // --response format--
         // each post:
@@ -70,42 +69,62 @@ public class MainActivity extends AppCompatActivity {
         //     }
         // }
 
-        StringRequest req = new StringRequest(Request.Method.GET, this.REQUEST_IP + "/posts",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try{
-                            JSONArray resArray = new JSONArray("["+response+"]");
-                            JSONObject resJson = new JSONObject(resArray.getJSONObject(0).toString());
-                            JSONArray data = new JSONArray(resJson.getJSONArray("data").toString());
-                            for(int i = 0; i < data.length(); i++){
-                                String postString = data.getJSONObject(i).toString();
-                                resPostJsonString.add(postString);
+        View mainview = findViewById(R.id.post_recyclerview);
+//        mainview.setVisibility(View.INVISIBLE);
+        try{
+            StringRequest req = new StringRequest(Request.Method.GET, this.REQUEST_IP + "/posts",
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Log.i("volley res", "onResponse: " + response);
+                            addPostFromJSONRes(response);
+                            mainview.setVisibility(View.VISIBLE);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            int resCode = error.networkResponse.statusCode;
+                            if(resCode == 404){
+                                View errorText = findViewById(R.id.home_error_text);
                             }
                         }
-                        catch (Error e){
-                            Log.e("err", Objects.requireNonNull(e.getMessage()));
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                        //add example data to array
-                        Log.i("exdat", resPostJsonString.toString());
-                        for(String post : resPostJsonString){
-                            data.add(new Post(post));
-                        }
+                    }
+            );
+            RequestQueue queue = Volley.newRequestQueue(this);
+            queue.add(req);
+        }
+        catch (Exception e) {
+            Log.e("volley err", Objects.requireNonNull(e.getMessage()));
+        }
 
-                        // visible post should be in postData array
-                        postData.addAll(data);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("err", Objects.requireNonNull(error.getMessage()));
-                    }
-        });
-        RequestQueue queue = Volley.newRequestQueue(this);
-        queue.add(req);
+    }
+
+    private void addPostFromJSONRes(String response){
+        ArrayList<String> resPostJsonString = new ArrayList<String>();
+        ArrayList<Post> dataArray = new ArrayList<Post>();
+        try{
+            JSONArray resArray = new JSONArray("["+response+"]");
+            JSONObject resJson = new JSONObject(resArray.getJSONObject(0).toString());
+            JSONArray data = new JSONArray(resJson.getJSONArray("data").toString());
+            for(int i = 0; i < data.length(); i++){
+                String postString = data.getJSONObject(i).toString();
+                resPostJsonString.add(postString);
+            }
+        }
+        catch (Error e){
+            Log.e("err", Objects.requireNonNull(e.getMessage()));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        //add example data to array
+        Log.i("exdat", resPostJsonString.toString());
+        for(String post : resPostJsonString){
+            dataArray.add(new Post(post));
+        }
+
+        // visible post should be in postData array
+        postData.addAll(dataArray);
 
     }
 
@@ -154,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView accBackBtn = findViewById(R.id.account_back_btn);
         LinearLayout accBlockingLayout = findViewById(R.id.homepageBlocking_layout);
         RelativeLayout accMenu = findViewById(R.id.account_relative_layout);
+        ImageView addAccBtn = findViewById(R.id.add_acc_btn);
 
 
         // main data to display to homepage
@@ -176,6 +196,10 @@ public class MainActivity extends AppCompatActivity {
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {
+                if(accMenu.getVisibility() == View.VISIBLE){
+                    closeAccountMenu();
+                    return;
+                }
                 Toast backToast; // Toast message
                 if (backPressedTime + 2000 > System.currentTimeMillis()) {
                     finish();
@@ -209,6 +233,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openAccountMenu();
+            }
+        });
+
+        addAccBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, AddAccountActivity.class));
             }
         });
 
