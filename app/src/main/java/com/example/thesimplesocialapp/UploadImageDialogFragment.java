@@ -35,7 +35,7 @@ public class UploadImageDialogFragment extends DialogFragment {
             mCallback = (IRegisImagePath) context;
         }
         catch (ClassCastException e) {
-            Log.d("MyDialog", "Activity doesn't implement the needed interface");
+            Log.d("Register image upload", "Activity doesn't implement the needed interface");
         }
     }
 
