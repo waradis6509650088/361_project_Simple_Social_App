@@ -2,6 +2,7 @@ package com.example.thesimplesocialapp;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -25,6 +26,19 @@ import androidx.loader.content.CursorLoader;
 
 public class UploadImageDialogFragment extends DialogFragment {
     private static final int PICK_IMAGE_REQUEST = 1;
+    private IRegisImagePath mCallback;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (IRegisImagePath) context;
+        }
+        catch (ClassCastException e) {
+            Log.d("MyDialog", "Activity doesn't implement the needed interface");
+        }
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -45,7 +59,6 @@ public class UploadImageDialogFragment extends DialogFragment {
     }
     private void showFileChooser() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
         // Start the Intent
         imageChooserLauncher.launch(galleryIntent);
     }
@@ -55,14 +68,12 @@ public class UploadImageDialogFragment extends DialogFragment {
                 @Override
                 public void onActivityResult(ActivityResult o) {
                     String filePath;
-                    Uri data = o.getData().getData();
-                    filePath = getPath(data);
-                    Log.i("image path", filePath);
-//                    if (o.getResultCode() == Activity.RESULT_OK) {
-//                        Uri data = o.getData().getData();
-//                        filePath = getPath(data);
-//                        Log.i("image path", filePath);
-//                    }
+                    if (o.getResultCode() == Activity.RESULT_OK) {
+                        Uri data = o.getData().getData();
+                        filePath = getPath(data);
+                        Log.i("image path", filePath);
+                        mCallback.returnDataFromUploadImage("hello world");
+                    }
                 }
             });
     // upload image

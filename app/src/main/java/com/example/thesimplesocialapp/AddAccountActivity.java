@@ -7,15 +7,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.FragmentManager;
 
-public class AddAccountActivity extends AppCompatActivity {
+public class AddAccountActivity extends AppCompatActivity implements IRegisImagePath{
     private String regis_image_path;
     public void setRegis_image_path(String regis_image_path) {
         this.regis_image_path = regis_image_path;
@@ -61,7 +60,7 @@ public class AddAccountActivity extends AppCompatActivity {
     }
 
     private Cursor getEvents(SQLiteDatabase db){
-        String SELECT = LocalCred.TABLE_NAME;
+        String SELECT = ILocalCred.TABLE_NAME;
         String[] FROM = {"username", "servername", "token"};
         Cursor cursor = db.query(SELECT,
                 FROM,
@@ -72,6 +71,13 @@ public class AddAccountActivity extends AppCompatActivity {
                 "_ID"
         );
         return cursor;
+
+    }
+
+    @Override
+    public void returnDataFromUploadImage(String str) {
+        TextView imgUrl = findViewById(R.id.regis_image_fpath);
+        Log.i("img path", str);
 
     }
 }

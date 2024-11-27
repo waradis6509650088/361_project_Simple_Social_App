@@ -10,12 +10,12 @@ public class db_LocalCred extends SQLiteOpenHelper {
     public db_LocalCred(Context ctx){
         super(ctx, "app.db", null, 1);
         this.CREATE_TABLE =
-            "CREATE TABLE " + LocalCred.TABLE_NAME + "("
-            + LocalCred._ID + " INTEGER PRIMARY KEY, "
-            + LocalCred.COLUMN_SERVERNAME + " TEXT,"
-            + LocalCred.COLUMN_PROFIMGURL + " TEXT,"
-            + LocalCred.COLUMN_USERNAME + " TEXT,"
-            + LocalCred.COLUMN_TOKEN + " TEXT)";
+            "CREATE TABLE " + ILocalCred.TABLE_NAME + "("
+            + ILocalCred._ID + " INTEGER PRIMARY KEY, "
+            + ILocalCred.COLUMN_SERVERNAME + " TEXT,"
+            + ILocalCred.COLUMN_PROFIMGURL + " TEXT,"
+            + ILocalCred.COLUMN_USERNAME + " TEXT,"
+            + ILocalCred.COLUMN_TOKEN + " TEXT)";
     }
 
     @Override
@@ -37,7 +37,7 @@ public class db_LocalCred extends SQLiteOpenHelper {
         value.put("servername",server);
         value.put("usertoken",token);
         value.put("profimgurl",img);
-        db.insert(LocalCred.TABLE_NAME,null, value);
+        db.insert(ILocalCred.TABLE_NAME,null, value);
         db.close();
 
     }
