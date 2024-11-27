@@ -3,9 +3,13 @@ package com.example.thesimplesocialapp;
 import static android.app.PendingIntent.getActivity;
 import static androidx.compose.ui.text.SaversKt.save;
 
+import static java.security.AccessController.getContext;
+import static java.util.Objects.isNull;
+
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -40,11 +44,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.AccessControlContext;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<Post> postData;
+    private String TAG = "dev debug";
     long backPressedTime; // Time of the last back press
     private String REQUEST_IP = "https://668e-124-122-136-37.ngrok-free.app";
     private void getData(){
@@ -70,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         // }
 
         View mainview = findViewById(R.id.post_recyclerview);
+        TextView errorText_home = findViewById(R.id.home_error_text);
 //        mainview.setVisibility(View.INVISIBLE);
         try{
             StringRequest req = new StringRequest(Request.Method.GET, this.REQUEST_IP + "/posts",
@@ -78,15 +85,17 @@ public class MainActivity extends AppCompatActivity {
                         public void onResponse(String response) {
                             Log.i("volley res", "onResponse: " + response);
                             addPostFromJSONRes(response);
+                            errorText_home.setVisibility(View.INVISIBLE);
                             mainview.setVisibility(View.VISIBLE);
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            int resCode = error.networkResponse.statusCode;
+                            int resCode = isNull(error.networkResponse)? 0 : error.networkResponse.statusCode;
+                            errorText_home.setVisibility(View.VISIBLE);
                             if(resCode == 404){
-                                View errorText = findViewById(R.id.home_error_text);
+                                errorText_home.setText(String.format("Server not found :<\nTry selecting another account.\nError: %s", error));
                             }
                         }
                     }
@@ -161,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
         //EdgeToEdge.enable(this);
 
         setContentView(R.layout.activity_main);
+
         // homepage elements
         RecyclerView recycleview = findViewById(R.id.recycle_view);
         SwipeRefreshLayout swipeLayout = findViewById(R.id.swipe_refresh);
@@ -239,6 +249,9 @@ public class MainActivity extends AppCompatActivity {
         addAccBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(accMenu.getVisibility() == View.VISIBLE) {
+                    closeAccountMenu();
+                }
                 startActivity(new Intent(MainActivity.this, AddAccountActivity.class));
             }
         });

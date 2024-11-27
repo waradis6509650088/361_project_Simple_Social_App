@@ -81,7 +81,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Nothing here at this time :("
+                    android:text="Nothing here at this time :( \n Try selecting or add an account (top left)."
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     />
