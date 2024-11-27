@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // back button pressed confirmation
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true ) {
             @Override
             public void handleOnBackPressed() {
                 if(accMenu.getVisibility() == View.VISIBLE){
