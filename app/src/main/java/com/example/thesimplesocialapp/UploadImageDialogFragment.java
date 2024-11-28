@@ -35,10 +35,16 @@ public class UploadImageDialogFragment extends DialogFragment {
         builder.setMessage("Please upload an image to use as a profile picture.")
                 .setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        Bundle result = new Bundle();
+                        result.putInt("resCode", 1);
+                        getParentFragmentManager().setFragmentResult("regImgChoice", result);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        Bundle result = new Bundle();
+                        result.putInt("resCode", 0);
+                        getParentFragmentManager().setFragmentResult("regImgChoice", result);
                     }
                 });
         // Create the AlertDialog object and return it.

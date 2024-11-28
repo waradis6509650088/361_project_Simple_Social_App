@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,19 +17,16 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.ReturnThis;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentResultListener;
 
-public class AddAccountActivity extends AppCompatActivity implements IRegisImagePath{
-    private String regis_image_path;
-    ActivityResultLauncher<Intent> imageChooserLauncher;
-    // ======================= DELETE ===========================
-    public void setRegis_image_path(String regis_image_path) {
-        this.regis_image_path = regis_image_path;
-    }
-
+public class AddAccountActivity extends AppCompatActivity{
+    private ActivityResultLauncher<Intent> imageChooserLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,20 +39,17 @@ public class AddAccountActivity extends AppCompatActivity implements IRegisImage
         });
         ImageView addAccount_back_btn = findViewById(R.id.add_account_back_btn);
         Button regis_btn = findViewById(R.id.regis_btn);
-        UploadImageDialogFragment upload_regis_image_dialog = new UploadImageDialogFragment();
+        UploadImageDialogFragment upload_regis_image_dialogFragment = new UploadImageDialogFragment();
 
-        // ======================= DELETE ===========================
         imageChooserLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult o) {
                         String filePath;
-                        Log.i("h", "hello world");
-//                        mCallback.returnDataFromUploadImage("hello world");
                         if (o.getResultCode() == Activity.RESULT_OK) {
-//                        Uri data = o.getData().getData();
-//                        filePath = getPath(data);
-//                        Log.i("image path", filePath);
+                            Uri data = o.getData().getData();
+//                            filePath = getPath(data);
+                            Log.i("image path", data.toString());
                         }
                     }
                 });
@@ -68,24 +63,24 @@ public class AddAccountActivity extends AppCompatActivity implements IRegisImage
             Log.e("db error", e.getMessage() );
         }
 
+        getSupportFragmentManager().setFragmentResultListener("regImgChoice", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                if(result.getInt("resCode") > 0){
+                    Log.i("bund", result.toString());
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    imageChooserLauncher.launch(galleryIntent);
+                }
+            }
+        });
+
         regis_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                ActivityResultLauncher<Intent> dialog = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                        new ActivityResultCallback<ActivityResult>() {
-                            @Override
-                            public void onActivityResult(ActivityResult o) {
-
-                            }
-                        }
-                );
-                upload_regis_image_dialog.show(getSupportFragmentManager(),"getImageUpload");
-
-                // ======================= DELETE ===========================
-                imageChooserLauncher.launch(galleryIntent);
+                upload_regis_image_dialogFragment.show(getSupportFragmentManager(),"getImageUpload");
             }
         });
+
 
         addAccount_back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +88,10 @@ public class AddAccountActivity extends AppCompatActivity implements IRegisImage
                 finish();
             }
         });
+    }
+
+    private String getPath(Uri data) {
+        return null;
     }
 
 
@@ -111,10 +110,4 @@ public class AddAccountActivity extends AppCompatActivity implements IRegisImage
 
     }
 
-    @Override
-    public void returnDataFromUploadImage(String str) {
-        TextView imgUrl = findViewById(R.id.regis_image_fpath);
-        Log.i("img path", str);
-
-    }
 }
