@@ -3,27 +3,21 @@ package com.example.thesimplesocialapp;
 import static android.app.PendingIntent.getActivity;
 import static androidx.compose.ui.text.SaversKt.save;
 
-import static java.security.AccessController.getContext;
 import static java.util.Objects.isNull;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -32,7 +26,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -44,15 +37,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.AccessControlContext;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<Post> postData;
-    private String TAG = "dev debug";
     long backPressedTime; // Time of the last back press
-    private String REQUEST_IP = "https://668e-124-122-136-37.ngrok-free.app";
+    private String CURRENT_USERNAME;
+    private String CURRENT_TOKEN;
+    private String CURRENT_DOMAIN;
     private void getData(){
         // get data from somewhere
 
@@ -79,11 +72,11 @@ public class MainActivity extends AppCompatActivity {
         TextView errorText_home = findViewById(R.id.home_error_text);
 //        mainview.setVisibility(View.INVISIBLE);
         try{
-            StringRequest req = new StringRequest(Request.Method.GET, this.REQUEST_IP + "/posts",
+            StringRequest req = new StringRequest(Request.Method.GET, "https://" + this.CURRENT_DOMAIN + "/posts",
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Log.i("volley res", "onResponse: " + response);
+                            Log.i("volley res", "onResponse: " + response.toString());
                             addPostFromJSONRes(response);
                             errorText_home.setVisibility(View.INVISIBLE);
                             mainview.setVisibility(View.VISIBLE);
@@ -96,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
                             errorText_home.setVisibility(View.VISIBLE);
                             if(resCode == 404){
                                 errorText_home.setText(String.format("Server not found :<\nTry selecting another account.\nError: %s", error));
+                            }
+                            else{
+                                errorText_home.setText(String.format("Unknown error :<\nTry selecting another account.\nError: %s", error));
                             }
                         }
                     }
@@ -267,6 +263,8 @@ public class MainActivity extends AppCompatActivity {
         newPostBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, NewPostActivity.class));
+                overridePendingTransition(R.anim.slide_in_bot, R.anim.slide_out_bot);
             }
         });
 
@@ -293,6 +291,29 @@ public class MainActivity extends AppCompatActivity {
                 swipeLayout.setRefreshing(false);
             }
         });
+    }
+    public String getCURRENT_TOKEN() {
+        return CURRENT_TOKEN;
+    }
+
+    public void setCURRENT_TOKEN(String CURRENT_TOKEN) {
+        this.CURRENT_TOKEN = CURRENT_TOKEN;
+    }
+
+    public String getCURRENT_USERNAME() {
+        return CURRENT_USERNAME;
+    }
+
+    public void setCURRENT_USERNAME(String CURRENT_USERNAME) {
+        this.CURRENT_USERNAME = CURRENT_USERNAME;
+    }
+
+    public String getCURRENT_DOMAIN() {
+        return CURRENT_DOMAIN;
+    }
+
+    public void setCURRENT_DOMAIN(String CURRENT_DOMAIN) {
+        this.CURRENT_DOMAIN = CURRENT_DOMAIN;
     }
 
 }

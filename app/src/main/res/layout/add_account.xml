@@ -18,14 +18,14 @@
             android:layout_width="40dp"
             android:layout_height="50dp"
             android:src="@drawable/back" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add an account"
-            android:textSize="24sp"
             android:layout_margin="10dp"
+            android:text="Add an account"
             android:textColor="@color/white"
-            />
+            android:textSize="24sp" />
     </LinearLayout>
     <EditText
         android:id="@+id/login_user"
@@ -33,6 +33,7 @@
         android:layout_height="30dp"
         android:background="@color/white"
         android:hint="Username"
+        android:textColorHint="@color/black"
         android:paddingStart="10dp"
 
         style="@style/loginBox"
@@ -44,6 +45,7 @@
         android:background="@color/white"
         android:hint="Password"
         android:inputType="textPassword"
+        android:textColorHint="@color/black"
         android:paddingStart="10dp"
 
         style="@style/loginBox"
@@ -54,15 +56,18 @@
         android:layout_height="30dp"
         android:background="@color/white"
         android:hint="Server name"
+        android:textColorHint="@color/black"
         android:paddingStart="10dp"
 
         style="@style/loginBox"
         />
-    <TextView
-        android:id="@+id/regis_image_fpath"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
+    <ImageView
+        android:id="@+id/regis_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/user_icon"
+        android:maxWidth="100dp"
+        android:maxHeight="100dp"
         />
     <LinearLayout
         android:layout_width="match_parent"

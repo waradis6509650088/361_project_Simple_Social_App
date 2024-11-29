@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +28,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentResultListener;
 
+import java.io.File;
+import java.net.URI;
+
 public class AddAccountActivity extends AppCompatActivity{
     private ActivityResultLauncher<Intent> imageChooserLauncher;
 
@@ -40,19 +46,7 @@ public class AddAccountActivity extends AppCompatActivity{
         ImageView addAccount_back_btn = findViewById(R.id.add_account_back_btn);
         Button regis_btn = findViewById(R.id.regis_btn);
         UploadImageDialogFragment upload_regis_image_dialogFragment = new UploadImageDialogFragment();
-
-        imageChooserLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult o) {
-                        String filePath;
-                        if (o.getResultCode() == Activity.RESULT_OK) {
-                            Uri data = o.getData().getData();
-//                            filePath = getPath(data);
-                            Log.i("image path", data.toString());
-                        }
-                    }
-                });
+        ImageView regis_img = findViewById(R.id.regis_image);
 
         // init db
         try{
@@ -63,16 +57,37 @@ public class AddAccountActivity extends AppCompatActivity{
             Log.e("db error", e.getMessage() );
         }
 
+        // fragment result listener from dialog fragment
+        // use when choosing picture when registering
         getSupportFragmentManager().setFragmentResultListener("regImgChoice", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 if(result.getInt("resCode") > 0){
-                    Log.i("bund", result.toString());
-                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     imageChooserLauncher.launch(galleryIntent);
                 }
             }
         });
+
+        // init image picker for when choosing pic when registering
+        imageChooserLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult o) {
+                        if (o.getResultCode() == Activity.RESULT_OK) {
+                            try{
+                                Uri data = o.getData().getData();
+                                String path = data.getPath();
+                                File img = new File(path);
+                                Bitmap imgBit = MediaStore.Images.Media.getBitmap(getContentResolver(), data);
+                                regis_img.setImageBitmap(imgBit);
+                            } catch (Exception e) {
+                                Log.e("regImgUpload", "Error when getting image path: " + e.getMessage());
+                            }
+                        }
+                    }
+                });
+
 
         regis_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,11 +104,6 @@ public class AddAccountActivity extends AppCompatActivity{
             }
         });
     }
-
-    private String getPath(Uri data) {
-        return null;
-    }
-
 
     private Cursor getEvents(SQLiteDatabase db){
         String SELECT = ILocalCred.TABLE_NAME;
