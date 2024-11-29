@@ -45,6 +45,7 @@ public class AddAccountActivity extends AppCompatActivity{
         });
         ImageView addAccount_back_btn = findViewById(R.id.add_account_back_btn);
         Button regis_btn = findViewById(R.id.regis_btn);
+        Button login_btn = findViewById(R.id.login_btn);
         UploadImageDialogFragment upload_regis_image_dialogFragment = new UploadImageDialogFragment();
         ImageView regis_img = findViewById(R.id.regis_image);
 
@@ -88,6 +89,11 @@ public class AddAccountActivity extends AppCompatActivity{
                     }
                 });
 
+        login_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
 
         regis_btn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,8 +1,6 @@
 package com.example.thesimplesocialapp;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +18,10 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 
-public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
+public class PostPageRecycleViewAdapter extends RecyclerView.Adapter<PostPageRecycleViewAdapter.ViewHolder> {
     ArrayList<Post> postList;
-    RecycleViewAdapter(ArrayList<Post> post){
+    PostPageRecycleViewAdapter(ArrayList<Post> post){
         this.postList = post;
     }
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -64,17 +59,16 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
     @NonNull
     @Override
-    public RecycleViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PostPageRecycleViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.each_post, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecycleViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PostPageRecycleViewAdapter.ViewHolder holder, int position) {
         //post_username
         //post_undername
         //post_text
-        String logtag = "recyview";
         Post pos = this.postList.get(position);
         holder.getPostUsername().setText(pos.getUsername());
         holder.getPostUndername().setText(pos.getDatePosted());

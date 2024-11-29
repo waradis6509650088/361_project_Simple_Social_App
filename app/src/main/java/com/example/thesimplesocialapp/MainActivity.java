@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
         // attaching data to card
         getData();
-        RecycleViewAdapter adapter = new RecycleViewAdapter(postData);
+        PostPageRecycleViewAdapter adapter = new PostPageRecycleViewAdapter(postData);
 
         recycleview.setLayoutManager(new LinearLayoutManager(this));
         recycleview.setAdapter(adapter);
@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // create empty tmp array and tmp adapter
                 ArrayList<Post> tmp = new ArrayList<Post>();
-                RecycleViewAdapter tmpAdapter = new RecycleViewAdapter(tmp);
+                PostPageRecycleViewAdapter tmpAdapter = new PostPageRecycleViewAdapter(tmp);
                 recycleview.setAdapter(tmpAdapter);
 
                 // clear postData and set the adapter back
