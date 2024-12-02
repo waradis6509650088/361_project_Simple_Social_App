@@ -11,9 +11,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     long backPressedTime; // Time of the last back press
     private String CURRENT_USERNAME;
     private String CURRENT_TOKEN;
-    private String CURRENT_DOMAIN;
+    public static String CURRENT_DOMAIN;
     private void getData(){
         // get data from somewhere
 
@@ -87,11 +90,10 @@ public class MainActivity extends AppCompatActivity {
                         public void onErrorResponse(VolleyError error) {
                             int resCode = isNull(error.networkResponse)? 0 : error.networkResponse.statusCode;
                             errorText_home.setVisibility(View.VISIBLE);
-                            if(resCode == 404){
-                                errorText_home.setText(String.format("Server not found :<\nTry selecting another account.\nError: %s", error));
-                            }
-                            else{
-                                errorText_home.setText(String.format("Unknown error :<\nTry selecting another account.\nError: %s", error));
+                            switch(resCode){
+                                case 404: errorText_home.setText(String.format("Server not found :<\nTry selecting another account.\nError: %s ", error));break;
+                                case 0: errorText_home.setText(String.format("Server address is null :<\nTry selecting another account.\nError: %s ", error));break;
+                                default: errorText_home.setText(String.format("Unknown error :<\nTry selecting another account.\nError: %s", error));break;
                             }
                         }
                     }
@@ -123,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
         //add example data to array
-        Log.i("exdat", resPostJsonString.toString());
         for(String post : resPostJsonString){
             dataArray.add(new Post(post));
         }
@@ -157,7 +158,36 @@ public class MainActivity extends AppCompatActivity {
         accMenu.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_out_left));
         accMenu.setVisibility(View.GONE);
         accMenu.setClickable(false);
+    }
 
+    private void updateTitle(){
+        AppDatabase db;
+        String user;
+        String server;
+        try {
+            db = new AppDatabase(getApplicationContext());
+            user = isNull(db.getCurrentUsername()) ? "-" : db.getCurrentUsername();
+            server = isNull(db.getCurrentServername()) ? "-" : db.getCurrentServername();
+            this.CURRENT_TOKEN = db.getCurrentToken();
+        } catch (Exception e) {
+            user = "-";
+            server = "-";
+        }
+        TextView text = findViewById(R.id.mainpage_title);
+        this.CURRENT_DOMAIN = server;
+        this.CURRENT_USERNAME = user;
+        text.setText(String.format("%s@%s", user, server));
+    }
+
+    private void updateAccountList(DBListViewAdapter adapter){
+        ListView list = findViewById(R.id.acc_select_list);
+        list.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateTitle();
     }
 
     @Override
@@ -170,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
         // homepage elements
         RecyclerView recycleview = findViewById(R.id.recycle_view);
         SwipeRefreshLayout swipeLayout = findViewById(R.id.swipe_refresh);
-        RelativeLayout mainLayout = findViewById(R.id.main_layout);
         LinearLayout menuBtn = findViewById(R.id.menu_btn);
         LinearLayout newPostBtn = findViewById(R.id.new_post_btn);
         LinearLayout accountBtn = findViewById(R.id.account_btn);
@@ -180,23 +209,30 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout accBlockingLayout = findViewById(R.id.homepageBlocking_layout);
         RelativeLayout accMenu = findViewById(R.id.account_relative_layout);
         ImageView addAccBtn = findViewById(R.id.add_acc_btn);
+        ListView accountList = findViewById(R.id.acc_select_list);
 
+        // update homepage title
+        updateTitle();
 
         // main data to display to homepage
         postData = new ArrayList<Post>();
 
         // attaching data to card
         getData();
-        PostPageRecycleViewAdapter adapter = new PostPageRecycleViewAdapter(postData);
+        PostPageRecycleViewAdapter postAdapter = new PostPageRecycleViewAdapter(postData);
 
         recycleview.setLayoutManager(new LinearLayoutManager(this));
-        recycleview.setAdapter(adapter);
+        recycleview.setAdapter(postAdapter);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        //account list
+        DBListViewAdapter accountListAdapter = new DBListViewAdapter(getApplicationContext());
+        updateAccountList(accountListAdapter);
 
         // back button pressed confirmation
         OnBackPressedCallback callback = new OnBackPressedCallback(true ) {
@@ -221,6 +257,24 @@ public class MainActivity extends AppCompatActivity {
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
 
+        accountList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AppDatabase db;
+                try{
+                    db = new AppDatabase(getApplicationContext());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                JSONObject item = (JSONObject) accountListAdapter.getItem(position);
+                try {
+                    db.setCurrentCredFromLocalCred(item.getString("username"), item.getString("servername"));
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+                closeAccountMenu();
+            }
+        });
         accBlockingLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openAccountMenu();
+                updateAccountList(accountListAdapter);
             }
         });
 
@@ -274,6 +329,8 @@ public class MainActivity extends AppCompatActivity {
             public void onRefresh() {
                 //==============================================================================
                 // if change without this the, app will throw a null pointer exception
+                updateTitle();
+                updateAccountList(accountListAdapter);
 
                 // create empty tmp array and tmp adapter
                 ArrayList<Post> tmp = new ArrayList<Post>();
@@ -283,14 +340,15 @@ public class MainActivity extends AppCompatActivity {
                 // clear postData and set the adapter back
                 postData.clear();
                 getData();
-                adapter.notifyDataSetChanged();
-                recycleview.setAdapter(adapter);
+                postAdapter.notifyDataSetChanged();
+                recycleview.setAdapter(postAdapter);
                 //==============================================================================
 
                 Log.i("current data",postData.toString());
                 swipeLayout.setRefreshing(false);
             }
         });
+
     }
     public String getCURRENT_TOKEN() {
         return CURRENT_TOKEN;

@@ -23,11 +23,11 @@ public class Post {
         Random rand = new Random();
         try {
             JSONObject data = new JSONObject(jsonString);
-            this.profImg = data.getString("prof-img");
-            this.postImg = data.getString("post-img");
+            this.profImg = data.getString("prof_img");
+            this.postImg = data.getString("post_img");
             this.username = data.getString("username");
-            this.datePosted = data.getString("date-posted");
-            this.textContent = data.getString("text-content");
+            this.datePosted = data.getString("date_posted");
+            this.textContent = data.getString("text_content");
         }
         catch (JSONException e) {
             throw new RuntimeException(e);
@@ -55,10 +55,4 @@ public class Post {
     public boolean isHasPostImg() {
         return hasPostImg;
     }
-
-    public void setHasPostImg(boolean hasPostImg) {
-        this.hasPostImg = hasPostImg;
-    }
-
-
 }

@@ -24,7 +24,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Home"
+                android:text="Menu"
                 android:textColor="@color/white"
                 android:textSize="24dp"
                 />
@@ -39,7 +39,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="hello test"
+                android:text="Settings"
                 android:textColor="@color/blue_green_5"
                 android:textSize="30dp"
                 android:layout_marginTop="10dp"
@@ -48,7 +48,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="hello test"
+                android:text="Appearance"
                 android:textColor="@color/blue_green_5"
                 android:textSize="30dp"
                 android:layout_marginTop="10dp"
@@ -57,7 +57,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="hello test"
+                android:text="Report bug"
                 android:textColor="@color/blue_green_5"
                 android:textSize="30dp"
                 android:layout_marginTop="10dp"

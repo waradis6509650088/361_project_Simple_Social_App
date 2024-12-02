@@ -36,6 +36,7 @@
                     android:layout_height="@dimen/prof_img_h"
                     android:maxWidth="@dimen/prof_img_w"
                     android:maxHeight="@dimen/prof_img_h"
+                    android:scaleType="centerCrop"
                     />
 
             </androidx.cardview.widget.CardView>
@@ -79,6 +80,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:maxHeight="200dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
             />
 
     </LinearLayout>
