@@ -34,6 +34,9 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
 public class AddAccountActivity extends AppCompatActivity{
     private ActivityResultLauncher<Intent> imageChooserLauncher;
 
@@ -158,7 +161,7 @@ public class AddAccountActivity extends AppCompatActivity{
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e("login network error", String.valueOf(error.networkResponse.statusCode));
+                    Log.e("login network error", String.valueOf((error.networkResponse == null)? 0 : error.networkResponse.statusCode));
                     Toast errorToast = Toast.makeText(getApplicationContext(), "unknow error, failed to login" + error.toString(), Toast.LENGTH_SHORT);
                     errorToast.show();
                 }
@@ -195,8 +198,9 @@ public class AddAccountActivity extends AppCompatActivity{
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e("create new user network error", String.valueOf(error.networkResponse.statusCode));
-                    if(error.networkResponse.statusCode == 409){
+                    int netRes = (error.networkResponse == null)? 0 : error.networkResponse.statusCode;
+                    Log.e("create new user network error", String.valueOf(netRes));
+                    if(netRes == 409){
                         Toast errorToast = Toast.makeText(getApplicationContext(), "Account already exists on server", Toast.LENGTH_SHORT);
                         errorToast.show();
                     }
