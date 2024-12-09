@@ -1,11 +1,14 @@
 package com.example.thesimplesocialapp;
 
+import static android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -66,6 +69,7 @@ public class AddAccountActivity extends AppCompatActivity{
             Log.e("db error", e.getMessage() );
         }
 
+
         // fragment result listener from dialog fragment
         // use when choosing picture when registering
         getSupportFragmentManager().setFragmentResultListener("regImgChoice", this, new FragmentResultListener() {
@@ -90,14 +94,30 @@ public class AddAccountActivity extends AppCompatActivity{
                                 String view_username = add_acc_username.getText().toString();
                                 String view_password = add_acc_password.getText().toString();
                                 String view_servername = add_acc_servername.getText().toString();
-                                String uploadedImageUrl = Utils.uploadImage(uri);
-                                registerNewAccount(view_servername, view_username, view_password, uploadedImageUrl);
+                                Utils.uploadImage(getPath(uri), getApplicationContext(), view_servername, new Utils.UploadImageCallback() {
+                                    @Override
+                                    public void onUploadComplete(String response) {
+                                        registerNewAccount(view_servername, view_username, view_password, response);
+                                    }
+
+                                    @Override
+                                    public void onUploadFailed(Exception e) {
+                                        Log.e("file failed to upload", String.valueOf(e));
+
+                                    }
+                                });
                             } catch (Exception e) {
                                 Log.e("regImgUpload", "Error when getting image path: " + e.getMessage());
                             }
                         }
                     }
                 });
+
+        if(!Environment.isExternalStorageManager()){
+            Intent intent = new Intent(ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
+            return;
+        }
 
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override

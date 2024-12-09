@@ -6,12 +6,14 @@ import static androidx.compose.ui.text.SaversKt.save;
 import static java.util.Objects.isNull;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -49,31 +51,13 @@ public class MainActivity extends AppCompatActivity {
     private String CURRENT_USERNAME;
     private String CURRENT_TOKEN;
     public static String CURRENT_DOMAIN;
+    private AppDatabase db;
+    DBListViewAdapter accountListAdapter;
     private void getData(){
         // get data from somewhere
 
-        // --response format--
-        // each post:
-        // {
-        //     username:xxx,
-        //     prof-img:xxx,
-        //     post-img:xxx,
-        //     date-posted:unixtime,
-        //     text-content:xxx
-        // }
-        // all post:
-        // {
-        //     data:{
-        //         eachpost{},
-        //         eachpost{},
-        //         eachpost{],
-        //         ...
-        //     }
-        // }
-
         View mainview = findViewById(R.id.post_recyclerview);
         TextView errorText_home = findViewById(R.id.home_error_text);
-//        mainview.setVisibility(View.INVISIBLE);
         try{
             StringRequest req = new StringRequest(Request.Method.GET, "https://" + this.CURRENT_DOMAIN + "/posts",
                     new Response.Listener<String>() {
@@ -160,8 +144,16 @@ public class MainActivity extends AppCompatActivity {
         accMenu.setClickable(false);
     }
 
+    private void refresh(Context ctx){
+        try {
+            this.db = new AppDatabase(ctx);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     private void updateTitle(){
-        AppDatabase db;
         String user;
         String server;
         try {
@@ -179,15 +171,18 @@ public class MainActivity extends AppCompatActivity {
         text.setText(String.format("%s@%s", user, server));
     }
 
-    private void updateAccountList(DBListViewAdapter adapter){
+    private void updateAccountList(){
         ListView list = findViewById(R.id.acc_select_list);
-        list.setAdapter(adapter);
+        accountListAdapter = new DBListViewAdapter(getApplicationContext());
+        list.setAdapter(accountListAdapter);
+        ((BaseAdapter) list.getAdapter()).notifyDataSetChanged();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         updateTitle();
+        refresh(getApplicationContext());
     }
 
     @Override
@@ -231,8 +226,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //account list
-        DBListViewAdapter accountListAdapter = new DBListViewAdapter(getApplicationContext());
-        updateAccountList(accountListAdapter);
+        accountListAdapter = new DBListViewAdapter(getApplicationContext());
+        updateAccountList();
 
         // back button pressed confirmation
         OnBackPressedCallback callback = new OnBackPressedCallback(true ) {
@@ -293,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openAccountMenu();
-                updateAccountList(accountListAdapter);
+                updateAccountList();
             }
         });
 
@@ -330,7 +325,8 @@ public class MainActivity extends AppCompatActivity {
                 //==============================================================================
                 // if change without this the, app will throw a null pointer exception
                 updateTitle();
-                updateAccountList(accountListAdapter);
+                refresh(getApplicationContext());
+                updateAccountList();
 
                 // create empty tmp array and tmp adapter
                 ArrayList<Post> tmp = new ArrayList<Post>();

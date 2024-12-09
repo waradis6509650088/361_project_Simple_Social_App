@@ -125,34 +125,50 @@ public class NewPostActivity extends AppCompatActivity {
             postobj.put("text_content", text.getText().toString());
             postobj.put("token", db.getCurrentToken());
             if(imgUri != null){
-                postobj.put("post_img",Utils.uploadImage(imgUri));
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        try{
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST
-                    , "https://" + db.getCurrentServername() + "/create-post"
-                    , postobj
-                    , new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    Toast success = Toast.makeText(getApplicationContext(), "post success", Toast.LENGTH_SHORT);
-                    success.show();
-                    finish();
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("post network error", String.valueOf(error.networkResponse.statusCode));
-                    Toast errorToast = Toast.makeText(getApplicationContext(), "unknow error, failed to post" + error.toString(), Toast.LENGTH_SHORT);
-                    errorToast.show();
-                    finish();
-                }
-            });
-            requestQueue.add(req);
+                Utils.uploadImage(getPath(imgUri), getApplicationContext(), MainActivity.CURRENT_DOMAIN, new Utils.UploadImageCallback() {
+                    @Override
+                    public void onUploadComplete(String response) {
+                        try{
+                            postobj.put("post_img", response);
 
+                            try{
+                                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                                JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST
+                                        , "https://" + db.getCurrentServername() + "/create-post"
+                                        , postobj
+                                        , new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Toast success = Toast.makeText(getApplicationContext(), "post success", Toast.LENGTH_SHORT);
+                                        success.show();
+                                        finish();
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Log.e("post network error", String.valueOf(error.networkResponse.statusCode));
+                                        Toast errorToast = Toast.makeText(getApplicationContext(), "unknow error, failed to post" + error.toString(), Toast.LENGTH_SHORT);
+                                        errorToast.show();
+                                        finish();
+                                    }
+                                });
+                                requestQueue.add(req);
+
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                            Log.i("saved obj", postobj.toString());
+                        }
+                        catch (Exception e){
+                        }
+                    }
+
+                    @Override
+                    public void onUploadFailed(Exception e) {
+                        Log.e("upload image error", "onUploadFailed: " + e);
+                    }
+                });
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.thesimplesocialapp"
-        minSdk 24
-        targetSdk 34
+        minSdk 30
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -39,6 +39,7 @@ dependencies {
     implementation libs.volley
     implementation libs.glide
     implementation libs.androidx.material3
+    implementation libs.okhttp
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
