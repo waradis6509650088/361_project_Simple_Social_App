@@ -47,10 +47,11 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<Post> postData;
-    long backPressedTime; // Time of the last back press
+    long backPressedTime;
     private String CURRENT_USERNAME;
     private String CURRENT_TOKEN;
     public static String CURRENT_DOMAIN;
+    public static String PROTOCOL = "http://";
     private AppDatabase db;
     DBListViewAdapter accountListAdapter;
     private void getData(){
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         View mainview = findViewById(R.id.post_recyclerview);
         TextView errorText_home = findViewById(R.id.home_error_text);
         try{
-            StringRequest req = new StringRequest(Request.Method.GET, "https://" + this.CURRENT_DOMAIN + "/posts",
+            StringRequest req = new StringRequest(Request.Method.GET, PROTOCOL + this.CURRENT_DOMAIN + "/posts",
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -73,11 +74,16 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             int resCode = isNull(error.networkResponse)? 0 : error.networkResponse.statusCode;
+                            Log.i("net res", String.valueOf(error.networkResponse) + "   " + resCode);
                             errorText_home.setVisibility(View.VISIBLE);
                             switch(resCode){
                                 case 404: errorText_home.setText(String.format("Server not found :<\nTry selecting another account.\nError: %s ", error));break;
-                                case 0: errorText_home.setText(String.format("Server address is null :<\nTry selecting another account.\nError: %s ", error));break;
                                 default: errorText_home.setText(String.format("Unknown error :<\nTry selecting another account.\nError: %s", error));break;
+                            }
+                            if(resCode == 307 || error.toString().contains("EPROTO")){
+                                Log.i("CHANGEPROTO", error.networkResponse.toString() + "   " + resCode);
+                                PROTOCOL = (Objects.equals(PROTOCOL, "http://"))? "https://" : "http://";
+                                errorText_home.setText(String.format("Protocol error! :<\nTry refreshing or re-open the app.\nError: %s ", error));
                             }
                         }
                     }

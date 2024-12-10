@@ -68,7 +68,7 @@ public class DBListViewAdapter extends BaseAdapter {
 
         JSONObject jsonObject = data.get(position);
         try {
-            Glide.with(this.context).load("https://" + MainActivity.CURRENT_DOMAIN + "/res/" + jsonObject.getString("profimgurl")).into(pic);
+            Glide.with(this.context).load(MainActivity.PROTOCOL + MainActivity.CURRENT_DOMAIN + "/res/" + jsonObject.getString("profimgurl")).into(pic);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -70,7 +70,7 @@ public class Utils {
                 .build();
 
         Request request = new Request.Builder()
-                .url("https://" + servername + "/upload")
+                .url(MainActivity.PROTOCOL + servername + "/upload")
                 .post(requestBody)
                 .build();
 

@@ -76,7 +76,7 @@ public class PostPageRecycleViewAdapter extends RecyclerView.Adapter<PostPageRec
         ImageView postImg = holder.getPostImg();
         ImageView profImg = holder.getProfImg();
         postImg.setVisibility(View.INVISIBLE);
-        Glide.with(holder.itemView.getContext()).load("https://" + MainActivity.CURRENT_DOMAIN +"/res/" + pos.getPostImg()).listener(new RequestListener<Drawable>() {
+        Glide.with(holder.itemView.getContext()).load(MainActivity.PROTOCOL + MainActivity.CURRENT_DOMAIN +"/res/" + pos.getPostImg()).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, @Nullable Object model, @NonNull Target<Drawable> target, boolean isFirstResource) {
                 postImg.setVisibility(View.GONE);
@@ -89,7 +89,7 @@ public class PostPageRecycleViewAdapter extends RecyclerView.Adapter<PostPageRec
                 return false;
             }
         }).into(postImg);
-        Glide.with(holder.itemView.getContext()).load("https://" + MainActivity.CURRENT_DOMAIN + "/res/" + pos.getProfImg()).into(profImg);
+        Glide.with(holder.itemView.getContext()).load(MainActivity.PROTOCOL + MainActivity.CURRENT_DOMAIN + "/res/" + pos.getProfImg()).into(profImg);
     }
 
     @Override

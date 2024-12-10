@@ -158,7 +158,7 @@ public class AddAccountActivity extends AppCompatActivity{
             loginRequest.put("username",usr);
             loginRequest.put("password",pwd);
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, "https://" + domain + "/login", loginRequest, new Response.Listener<JSONObject>() {
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, MainActivity.PROTOCOL + domain + "/login", loginRequest, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try{
@@ -199,7 +199,7 @@ public class AddAccountActivity extends AppCompatActivity{
             reqData.put("username", usr);
             reqData.put("prof_img", profUrl);
             reqData.put("password", pwd);
-            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, "https://" + domain + "/register-user", reqData, new Response.Listener<JSONObject>() {
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, MainActivity.PROTOCOL + domain + "/register-user", reqData, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try{

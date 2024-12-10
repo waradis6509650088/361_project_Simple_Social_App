@@ -134,7 +134,7 @@ public class NewPostActivity extends AppCompatActivity {
                             try{
                                 RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
                                 JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST
-                                        , "https://" + db.getCurrentServername() + "/create-post"
+                                        , MainActivity.PROTOCOL + db.getCurrentServername() + "/create-post"
                                         , postobj
                                         , new Response.Listener<JSONObject>() {
                                     @Override
