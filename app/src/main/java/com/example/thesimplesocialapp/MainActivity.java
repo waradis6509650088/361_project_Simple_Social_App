@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public static String PROTOCOL = "http://";
     private AppDatabase db;
     DBListViewAdapter accountListAdapter;
+    PostPageRecycleViewAdapter postAdapter;
     private void getData(){
         // get data from somewhere
 
@@ -74,16 +74,16 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             int resCode = isNull(error.networkResponse)? 0 : error.networkResponse.statusCode;
-                            Log.i("net res", String.valueOf(error.networkResponse) + "   " + resCode);
+                            Log.i("net res", String.valueOf(error) + "   " + resCode);
                             errorText_home.setVisibility(View.VISIBLE);
                             switch(resCode){
                                 case 404: errorText_home.setText(String.format("Server not found :<\nTry selecting another account.\nError: %s ", error));break;
                                 default: errorText_home.setText(String.format("Unknown error :<\nTry selecting another account.\nError: %s", error));break;
                             }
-                            if(resCode == 307 || error.toString().contains("EPROTO")){
-                                Log.i("CHANGEPROTO", error.networkResponse.toString() + "   " + resCode);
-                                PROTOCOL = (Objects.equals(PROTOCOL, "http://"))? "https://" : "http://";
-                                errorText_home.setText(String.format("Protocol error! :<\nTry refreshing or re-open the app.\nError: %s ", error));
+                            if(resCode == 307 || String.valueOf(error).contains("Unable to parse TLS packet header")){
+                                changeProtocol();
+                                refreshPost();
+                                errorText_home.setText(String.format(""));
                             }
                         }
                     }
@@ -95,6 +95,15 @@ public class MainActivity extends AppCompatActivity {
             Log.e("volley err", Objects.requireNonNull(e.getMessage()));
         }
 
+    }
+    public static void changeProtocol(){
+        PROTOCOL = (Objects.equals(PROTOCOL, "http://"))? "https://" : "http://";
+    }
+    public static boolean checkProtocolError(VolleyError err, int resCode){
+        if(resCode == 307 || String.valueOf(err).contains("Unable to parse TLS packet header")) {
+            return true;
+        }
+        return false;
     }
 
     private void addPostFromJSONRes(String response){
@@ -150,13 +159,26 @@ public class MainActivity extends AppCompatActivity {
         accMenu.setClickable(false);
     }
 
-    private void refresh(Context ctx){
+    private void refreshDb(Context ctx){
         try {
             this.db = new AppDatabase(ctx);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    private void refreshPost(){
+        RecyclerView recycleview = findViewById(R.id.recycle_view);
+        // create empty tmp array and tmp adapter
+        ArrayList<Post> tmp = new ArrayList<Post>();
+        PostPageRecycleViewAdapter tmpAdapter = new PostPageRecycleViewAdapter(tmp);
+        recycleview.setAdapter(tmpAdapter);
+
+        // clear postData and set the adapter back
+        postData.clear();
+        getData();
+        recycleview.setAdapter(postAdapter);
+        postAdapter.notifyDataSetChanged();
     }
 
     private void updateTitle(){
@@ -188,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateTitle();
-        refresh(getApplicationContext());
+        refreshDb(getApplicationContext());
     }
 
     @Override
@@ -220,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
 
         // attaching data to card
         getData();
-        PostPageRecycleViewAdapter postAdapter = new PostPageRecycleViewAdapter(postData);
+        postAdapter = new PostPageRecycleViewAdapter(postData);
 
         recycleview.setLayoutManager(new LinearLayoutManager(this));
         recycleview.setAdapter(postAdapter);
@@ -331,19 +353,10 @@ public class MainActivity extends AppCompatActivity {
                 //==============================================================================
                 // if change without this the, app will throw a null pointer exception
                 updateTitle();
-                refresh(getApplicationContext());
+                refreshDb(getApplicationContext());
+                refreshPost();
                 updateAccountList();
 
-                // create empty tmp array and tmp adapter
-                ArrayList<Post> tmp = new ArrayList<Post>();
-                PostPageRecycleViewAdapter tmpAdapter = new PostPageRecycleViewAdapter(tmp);
-                recycleview.setAdapter(tmpAdapter);
-
-                // clear postData and set the adapter back
-                postData.clear();
-                getData();
-                postAdapter.notifyDataSetChanged();
-                recycleview.setAdapter(postAdapter);
                 //==============================================================================
 
                 Log.i("current data",postData.toString());

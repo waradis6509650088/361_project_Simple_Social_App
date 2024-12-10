@@ -124,6 +124,7 @@ public class NewPostActivity extends AppCompatActivity {
             postobj.put("username", db.getCurrentUsername());
             postobj.put("text_content", text.getText().toString());
             postobj.put("token", db.getCurrentToken());
+            Log.i("img uri", String.valueOf(imgUri));
             if(imgUri != null){
                 Utils.uploadImage(getPath(imgUri), getApplicationContext(), MainActivity.CURRENT_DOMAIN, new Utils.UploadImageCallback() {
                     @Override
@@ -160,6 +161,7 @@ public class NewPostActivity extends AppCompatActivity {
                             Log.i("saved obj", postobj.toString());
                         }
                         catch (Exception e){
+                            Log.i("post error obj", "error when post");
                         }
                     }
 
@@ -168,6 +170,34 @@ public class NewPostActivity extends AppCompatActivity {
                         Log.e("upload image error", "onUploadFailed: " + e);
                     }
                 });
+            }
+            else{
+                try{
+                    RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                    JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST
+                            , MainActivity.PROTOCOL + db.getCurrentServername() + "/create-post"
+                            , postobj
+                            , new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Toast success = Toast.makeText(getApplicationContext(), "post success", Toast.LENGTH_SHORT);
+                            success.show();
+                            finish();
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("post network error", String.valueOf(error.networkResponse.statusCode));
+                            Toast errorToast = Toast.makeText(getApplicationContext(), "unknow error, failed to post" + error.toString(), Toast.LENGTH_SHORT);
+                            errorToast.show();
+                            finish();
+                        }
+                    });
+                    requestQueue.add(req);
+
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

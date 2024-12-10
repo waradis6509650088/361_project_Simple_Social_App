@@ -181,8 +181,13 @@ public class AddAccountActivity extends AppCompatActivity{
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e("login network error", String.valueOf((error.networkResponse == null)? 0 : error.networkResponse.statusCode));
-                    Toast errorToast = Toast.makeText(getApplicationContext(), "unknow error, failed to login" + error.toString(), Toast.LENGTH_SHORT);
+                    int resCode = (error.networkResponse == null)? 0 : error.networkResponse.statusCode;
+                    Log.e("login network error", String.valueOf(resCode));
+                    Toast errorToast = Toast.makeText(getApplicationContext(), "unknow error, failed to login\b" + error.toString(), Toast.LENGTH_SHORT);
+                    if(MainActivity.checkProtocolError(error, resCode)) {
+                        MainActivity.changeProtocol();
+                        errorToast = Toast.makeText(getApplicationContext(), "protocol error, please try again\n" + error.toString(), Toast.LENGTH_SHORT);
+                    }
                     errorToast.show();
                 }
             });
@@ -221,18 +226,22 @@ public class AddAccountActivity extends AppCompatActivity{
                     int netRes = (error.networkResponse == null)? 0 : error.networkResponse.statusCode;
                     Log.e("create new user network error", String.valueOf(netRes));
                     if(netRes == 409){
-                        Toast errorToast = Toast.makeText(getApplicationContext(), "Account already exists on server", Toast.LENGTH_SHORT);
+                        Toast errorToast = Toast.makeText(getApplicationContext(), "Account already exists on server\n", Toast.LENGTH_SHORT);
                         errorToast.show();
                     }
                     else{
-                        Toast errorToast = Toast.makeText(getApplicationContext(), "unknow error" + error.toString(), Toast.LENGTH_SHORT);
+                        Toast errorToast = Toast.makeText(getApplicationContext(), "unknow error, failed to register\n" + error.toString(), Toast.LENGTH_SHORT);
+                        if(MainActivity.checkProtocolError(error, netRes)) {
+                            MainActivity.changeProtocol();
+                            errorToast = Toast.makeText(getApplicationContext(), "protocol error, please try again\n" + error.toString(), Toast.LENGTH_SHORT);
+                        }
                         errorToast.show();
                     }
                 }
             });
             requestQueue.add(req);
         } catch (Exception e) {
-            Log.e("get token error", e.getMessage());
+            Log.e("get token error\n", e.getMessage());
         }
     }
     private String getPath(Uri uri){
