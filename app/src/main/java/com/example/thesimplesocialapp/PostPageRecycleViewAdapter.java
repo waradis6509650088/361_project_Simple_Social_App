@@ -17,7 +17,9 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class PostPageRecycleViewAdapter extends RecyclerView.Adapter<PostPageRecycleViewAdapter.ViewHolder> {
     ArrayList<Post> postList;
@@ -71,7 +73,7 @@ public class PostPageRecycleViewAdapter extends RecyclerView.Adapter<PostPageRec
         //post_text
         Post pos = this.postList.get(position);
         holder.getPostUsername().setText(pos.getUsername());
-        holder.getPostUndername().setText(pos.getDatePosted());
+        holder.getPostUndername().setText((new Date(Integer.parseInt(pos.getDatePosted())* 1000L)).toString());
         holder.getPostText().setText(pos.getTextContent());
         ImageView postImg = holder.getPostImg();
         ImageView profImg = holder.getProfImg();
