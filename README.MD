@@ -1,4 +1,4 @@
-## Term project for CS361: Simple Social App [name pending]
+## Term project for CS361: Simple Social App
 ### Tools
 - Android studio (Ladybug)
 ### Added dependency 
