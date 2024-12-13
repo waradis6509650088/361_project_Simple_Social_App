@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">The Simple Social App</string>
+    <string name="account_select_toptext">Accounts</string>
+    <string name="mainpage_current_user_info">MYUSER@DOMAIN.APP</string>
+    <string name="mainpage_error_text">Nothing here at this time :( \n Try selecting or add an account (top left).</string>
+    <string name="mainpage_newpost_btn">New Post</string>
+    <string name="add_account_top_text">Add an account</string>
+    <string name="add_account_username_field">Username</string>
+    <string name="add_account_password_field">Password</string>
+    <string name="add_account_servername_field">Server name</string>
+    <string name="add_account_login_btn">Login</string>
+    <string name="add_account_register_btn">register</string>
+    <string name="menupage_top_text">Menu</string>
+    <string name="menu_page_settings">Settings</string>
+    <string name="menupage_settings2">Appearance</string>
+    <string name="menpage_settings3">Report bug</string>
+    <string name="new_post_top_text">New Post</string>
+    <string name="new_post_text_input">Write somthing...</string>
+    <string name="new_post_attach_image">Attach image</string>
+    <string name="new_post_post_btn">Post</string>
 </resources>

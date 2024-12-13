@@ -18,15 +18,15 @@
             >
             <ImageView
                 android:id="@+id/menu_back_btn"
-                android:layout_width="40dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/backBt"
+                android:layout_height="@dimen/prof_img_h"
                 android:src="@drawable/back" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Menu"
+                android:text="@string/menupage_top_text"
                 android:textColor="@color/white"
-                android:textSize="24dp"
+                android:textSize="24sp"
                 />
         </LinearLayout>
 
@@ -39,29 +39,29 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Settings"
+                android:text="@string/menu_page_settings"
                 android:textColor="@color/blue_green_5"
-                android:textSize="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                android:textSize="30sp"
+                android:layout_marginTop="@dimen/erText"
+                android:layout_marginBottom="@dimen/erText"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Appearance"
+                android:text="@string/menupage_settings2"
                 android:textColor="@color/blue_green_5"
-                android:textSize="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                android:textSize="30sp"
+                android:layout_marginTop="@dimen/erText"
+                android:layout_marginBottom="@dimen/erText"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Report bug"
+                android:text="@string/menpage_settings3"
                 android:textColor="@color/blue_green_5"
-                android:textSize="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                android:textSize="30sp"
+                android:layout_marginTop="@dimen/erText"
+                android:layout_marginBottom="@dimen/erText"
                 />
         </LinearLayout>
 

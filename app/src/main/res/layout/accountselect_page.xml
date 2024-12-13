@@ -7,7 +7,7 @@
     android:layout_gravity="end"
     >
     <LinearLayout
-        android:layout_width="200dp"
+        android:layout_width="@dimen/settingMenu"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/blue_green_2"
@@ -19,15 +19,15 @@
             >
             <ImageView
                 android:id="@+id/account_back_btn"
-                android:layout_width="40dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/backBt"
+                android:layout_height="@dimen/prof_img_h"
                 android:src="@drawable/back" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Accounts"
+                android:text="@string/account_select_toptext"
                 android:textColor="@color/white"
-                android:textSize="24dp"
+                android:textSize="24sp"
                 />
         </LinearLayout>
         <ListView
@@ -44,9 +44,9 @@
 
             <ImageView
                 android:id="@+id/add_acc_btn"
-                android:layout_width="40dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="@dimen/backBt"
+                android:layout_height="@dimen/prof_img_h"
+                android:layout_marginTop="@dimen/plus"
                 android:src="@drawable/circle_plus" />
         </LinearLayout>
     </LinearLayout>

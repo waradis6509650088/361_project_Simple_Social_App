@@ -3,4 +3,18 @@
     <dimen name="prof_img_w">50dp</dimen>
     <dimen name="prof_img_h">50dp</dimen>
     <dimen name="max_post_img_h">500dp</dimen>
+    <dimen name="bc">0dp</dimen>
+    <dimen name="settingMenu">200dp</dimen>
+    <dimen name="backBt">40dp</dimen>
+    <dimen name="plus">10dp</dimen>
+    <dimen name="topMenu">60dp</dimen>
+    <dimen name="top2">1dp</dimen>
+    <dimen name="pfp">30dp</dimen>
+    <dimen name="erText">10dp</dimen>
+    <dimen name="accSelect">5dp</dimen>
+    <dimen name="cardView">100dp</dimen>
+    <dimen name="block">20dp</dimen>
+    <dimen name="corner">100dp</dimen>
+    <dimen name="gap">2dp</dimen>
+    <dimen name="attachImage">5dp</dimen>
 </resources>

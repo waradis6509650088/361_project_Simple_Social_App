@@ -12,52 +12,52 @@
         >
         <ImageView
             android:id="@+id/new_post_back_btn"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/backBt"
+            android:layout_height="@dimen/prof_img_h"
             android:src="@drawable/back" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/erText"
             android:textSize="24sp"
             android:textColor="@color/white"
-            android:text="New Post"
+            android:text="@string/new_post_top_text"
             />
 
     </LinearLayout>
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/new_post_text"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/cardView"
         android:background="@color/blue_green_3"
-        android:hint="Write somthing..."
-        android:padding="10dp"
+        android:hint="@string/new_post_text_input"
+        android:padding="@dimen/erText"
         android:inputType="text|textCapSentences|textMultiLine"
         android:gravity="top|start"
-        android:lineSpacingExtra="2dp"
+        android:lineSpacingExtra="@dimen/gap"
         android:lineSpacingMultiplier="1.2"
-        android:maxHeight="100dp"
+        android:maxHeight="@dimen/cardView"
         android:maxLength="200"
         android:singleLine="false"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:layout_margin="10dp"
+        android:layout_margin="@dimen/erText"
         android:textSize="14sp" />
     <LinearLayout
         android:id="@+id/new_post_attach_image_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="@dimen/erText"
+        android:layout_marginStart="@dimen/erText"
+        android:layout_marginEnd="@dimen/erText"
         android:background="@color/blue_green_2"
-        android:padding="10dp"
+        android:padding="@dimen/erText"
         >
         <ImageView
             android:id="@+id/new_post_attached_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxHeight="200dp"
+            android:maxHeight="@dimen/settingMenu"
             android:adjustViewBounds="true"
             />
     </LinearLayout>
@@ -65,19 +65,19 @@
         android:id="@+id/new_post_add_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="@dimen/erText"
         android:gravity="center_vertical"
         >
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/pfp"
+            android:layout_height="@dimen/pfp"
             android:src="@drawable/circle_plus"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="Attach image"
+            android:layout_marginStart="@dimen/attachImage"
+            android:text="@string/new_post_attach_image"
             android:textColor="@color/white"
             />
 
@@ -91,8 +91,8 @@
             android:id="@+id/new_post_post_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Post"
-            android:layout_marginEnd="10dp"
+            android:text="@string/new_post_post_btn"
+            android:layout_marginEnd="@dimen/erText"
             />
 
     </LinearLayout>

@@ -6,8 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    app:cardCornerRadius="20dp"
+    android:layout_margin="@dimen/erText"
+    app:cardCornerRadius="@dimen/block"
     android:backgroundTint="@color/blue_green_3"
     android:id="@+id/each_card"
     android:orientation="vertical">
@@ -15,7 +15,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="@dimen/erText"
         android:background="@color/blue_green_3"
         android:orientation="vertical">
 
@@ -28,7 +28,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="100dp"
+                app:cardCornerRadius="@dimen/corner"
                 >
                 <ImageView
                     android:id="@+id/post_prof_img"
@@ -49,7 +49,7 @@
                     android:id="@+id/post_username"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="@dimen/erText"
                     android:gravity="start"
                     android:textColor="@color/blue_green_5"
                     android:textSize="14sp" />
@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="12sp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/erText"
             android:inputType="textMultiLine"
             android:textColor="@color/blue_green_5" />
 

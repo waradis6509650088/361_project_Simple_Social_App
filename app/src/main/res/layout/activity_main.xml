@@ -20,22 +20,22 @@
             >
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="@dimen/topMenu"
                 android:background="@color/blue_green_1"
                 android:orientation="horizontal"
                 android:gravity="center_vertical|center_horizontal"
-                android:padding="1dp"
+                android:padding="@dimen/top2"
                 >
                 <LinearLayout
                     android:id="@+id/account_btn"
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/prof_img_h"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical|center_horizontal"
                     >
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="@dimen/pfp"
+                        android:layout_height="@dimen/pfp"
                         android:src="@drawable/user_icon"
                         />
                 </LinearLayout>
@@ -43,7 +43,7 @@
                     android:id="@+id/mainpage_title"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:text="MYUSER@DOMAIN.APP"
+                    android:text="@string/mainpage_current_user_info"
                     android:textSize="14sp"
                     android:textColor="@color/white"
                     android:layout_weight="1"
@@ -51,14 +51,14 @@
                     />
                 <LinearLayout
                     android:id="@+id/menu_btn"
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/prof_img_h"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical|center_horizontal"
                     >
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="@dimen/pfp"
+                        android:layout_height="@dimen/pfp"
                         android:src="@drawable/menu"
                         />
 
@@ -79,10 +79,10 @@
                     />
                 <TextView
                     android:id="@+id/home_error_text"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/erText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Nothing here at this time :( \n Try selecting or add an account (top left)."
+                    android:text="@string/mainpage_error_text"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     />
@@ -90,11 +90,11 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="@dimen/topMenu"
                 android:background="@color/blue_green_1"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:padding="1dp"
+                android:padding="@dimen/top2"
 
                 >
                 <LinearLayout
@@ -104,8 +104,8 @@
                     android:background="@color/blue_green_1"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    android:paddingLeft="50dp"
-                    android:paddingRight="50dp"
+                    android:paddingLeft="@dimen/prof_img_h"
+                    android:paddingRight="@dimen/prof_img_h"
                     >
                     <ImageView
                         android:layout_width="wrap_content"
@@ -115,9 +115,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="New Post"
+                        android:text="@string/mainpage_newpost_btn"
                         android:textColor="@color/white"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         />
 
                 </LinearLayout>
