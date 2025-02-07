@@ -6,3 +6,5 @@
 - Volley
 - SwipeRefreshLayout
 - okHttp
+### Server
+https://github.com/waradis6509650088/quick_and_unsafe_socialapp_server
